@@ -1,0 +1,166 @@
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+; #Warn  ; Enable warnings to assist with detecting common errors.
+SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+
+;main_gui
+
+Gui 1: +AlwaysOnTop 
+Gosub,currentDate
+Gosub,currentTime
+Gosub,guiupdator
+Gosub,guiupdator
+SetTimer,currentDate,1000
+SetTimer,currentTime,1000
+Gui 1: Font, s12
+Gui 1: Add, Text, w90 r1 x50 y60 ReadOnly vsimpletime -BackgroundTrans, %ctime%
+Gui 1: Add, Text, w110 r1 x200 y60 ReadOnly vsimpledate -BackgroundTrans, %cdate%
+;Gui 1: Add, Picture, x0 y0 gUImove, C:\Users\NAME\Pictures\titlebar2.png
+Gui 1: Add, Picture, x0 y0, C:\Users\NAME\Pictures\gui_one.png
+Gui 1: Font, s9
+Gui 1: Add, Button, x450 y10 gExit_Setup, X ;+BackgroundTrans, C:\Users\kgorml200\Pictures\Close-Circle-Buttons.png
+Gui 1: Add, Button, x50 y170 w80 h20 gSpectrum_DLI_1.2,Spectrum ;+BackgroundTrans, C:\Users\kgorml200\Pictures\Spectrum_button.png
+Gui 1: Add, Button, x150 y170 w80 h20 gComms, Comms ;+BackgroundTrans, C:\Users\kgorml200\Pictures\lcars_orange_button.png
+Gui 1: Add, Button, x250 y170 w80 h20 gVPN, Enable VPN
+Gui 1: Add, Button, x50 y230 w80 h30 gEVENT, Event
+Gui 1: Add, Button, x250 y230 w80 h30 gTicketing_DLI, NSD Ticketing
+Gui 1: Add, Button, x350 y230 w80 h30 gMonitoring_Channel_DLI, VID/VOD
+Gui 1: Add, Button, x150 y270 w80 h30 gStartmyday_DLI, Start my Day
+Gui 1: Add, Button, x50 y270 w80 h30 gEnd_of_Shift, End my Day
+Gui 1: Show, w500 h375
+Return
+
+; Button actions
+;============================================
+
+VPN:
+{
+Gui, Submit, NoHide
+	Run, ;VPN.EXE
+      ;wait for your VPN.EXE
+			winwaitactive,ahk_exe ;VPN.EXE
+      ;simple wait to catch this up optional
+			Sleep 5000	
+Return
+}
+
+Comms:
+{
+Gui, Submit, NoHide
+	Run, Teams.exe
+			winwaitactive,ahk_exe Teams.exe
+	Run, Outlook.exe
+			winwaitactive,ahk_exe Outlook.exe
+Return
+}
+
+Ticketing_DLI:
+{
+Gui, Submit, NoHide
+Run, Chrome
+winwaitactive,ahk_exe chrome.exe
+Sleep 1000		
+SendInput, https://;html {Enter} 
+	Sleep 100
+	SendInput, ^t
+SendInput, https://;html {Enter} 
+	Sleep 100
+	SendInput, ^t
+SendInput, http://;html {Enter} 
+	Sleep 100
+	SendInput, ^t
+SendInput, http://;html {Enter} 
+	Sleep 100
+	SendInput, ^t
+SendInput, https://;html {Enter} 
+	Sleep 100
+	SendInput, ^t
+SendInput, https://;html {Enter} 
+	Sleep 100
+Return
+}
+
+Monitoring_Channel_DLI:
+{
+Gui, Submit, NoHide
+	Run, Chrome
+		;winhide
+			winwaitactive,ahk_exe chrome.exe
+			Sleep 1000
+SendInput, https://;html {Enter} 
+Return
+}
+
+Event:
+{
+Gosub, Event_Managment_DLI
+sleep 1000
+Gosub, Ticketing_DLI
+Return
+}
+
+Event_Managment:
+{
+Gui, Submit, NoHide
+	Run, Chrome
+		;winhide
+			winwaitactive,ahk_exe chrome.exe
+			Sleep 1000
+
+Return
+}
+
+Startmyday_DLI:
+{
+Gosub, VPN 
+Sleep 1000
+Gosub, 
+Sleep, 10000
+Gosub, Event_Managment_DLI
+sleep 10000
+Gosub, Ticketing_DLI
+sleep 1000
+Gosub, Video_VOD_Channel_DLI
+sleep 1000
+return
+}
+
+End_of_Shift:
+{
+Gui, Submit, NoHide
+;if WinExist("Chrome")
+	WinClose, ahk_exe chrome.exe
+sleep 1000
+	WinClose, ahk_exe Teams.exe
+sleep 1000
+	WinClose, ahk_exe Outlook.exe
+return
+}
+
+UImove:
+{
+	PostMessage, 0xA1, 2,,, A
+	Return
+}
+
+guiupdator:
+	GuiControl, Text, simpletime , %ctime%
+	GuiControl, Text, simpledate , %cdate%
+	GuiControl, Text, ahktimestring , %A_Now%
+	return
+	
+currentDate:
+	FormatTime,cdate,,M/d/yyyy
+	Gosub,guiupdator
+	Return
+
+currentTime:
+	FormatTime,ctime,,h:mm:ss tt
+	Gosub,guiupdator
+	Return
+
+Exit_Setup:
+{
+	exitapp
+	Return
+}
