@@ -4,7 +4,7 @@ Gui,Add, Text,, Search for:
 Gui,Add, Edit ,w150 h50 vsend
 Gui,Add,Button, w300 gSearch_DL, Search
 Gui,Add, Text,, Search for ticket:
-Gui,Add, Edit ,w300 h50 vTicket
+Gui,Add, Edit ,w300 h50 vsend2
 Gui,Add,Button, w150 gSearch2, Search 
 Gui show
 return
